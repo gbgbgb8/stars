@@ -119,7 +119,6 @@ window.onload = function() {
       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
     });
   
-    // Initialize stars and start animation
     initializeStars();
     executeFrame();
 };
