@@ -17,6 +17,12 @@ window.onload = function() {
   
     var animate = true;
   
+    var spaceship = new Image();
+    spaceship.width = 32;
+    spaceship.height = 32;
+    spaceship.src = "https://img.icons8.com/windows/32/planet-globe.png";
+    spaceship.alt = "planet-globe";
+  
     function initializeStars() {
       centerX = canvas.width / 2;
       centerY = canvas.height / 2;
@@ -74,6 +80,8 @@ window.onload = function() {
         canvasContext.fillStyle = "rgba(209, 255, 255, " + currentStar.o + ")";
         canvasContext.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
       }
+      
+      canvasContext.drawImage(spaceship, centerX - spaceship.width / 2, centerY - spaceship.height / 2, spaceship.width, spaceship.height);
     }
   
     function executeFrame() {
