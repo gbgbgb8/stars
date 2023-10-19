@@ -114,4 +114,4 @@ window.onload = function() {
     // Initialize stars and start animation
     initializeStars();
     executeFrame();
-  };
+};
