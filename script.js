@@ -10,7 +10,7 @@ window.onload = function() {
     var warp = 0;
     var centerX, centerY;
   
-    var stars = [], currentStar;
+    var stars = [];
     var index;
   
     var dx = 0, dy = 0;
@@ -23,7 +23,7 @@ window.onload = function() {
   
       stars = [];
       for(index = 0; index < numStars; index++){
-        currentStar = {
+        var currentStar = {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           z: Math.random() * canvas.width,
@@ -35,15 +35,17 @@ window.onload = function() {
   
     function moveStars() {
       for(index = 0; index < numStars; index++) {
-        currentStar = stars[index];
-        currentStar.z -= (currentStar.z / canvas.width);
-        currentStar.x += dx;
-        currentStar.y += dy;
+        var currentStar = stars[index];
+        if(currentStar) {
+          currentStar.z -= 1;
+          currentStar.x += dx;
+          currentStar.y += dy;
   
-        if(currentStar.z <= 0 || currentStar.x < 0 || currentStar.y < 0 || currentStar.x > canvas.width || currentStar.y > canvas.height){
-          currentStar.z = canvas.width;
-          currentStar.x = Math.random() * canvas.width;
-          currentStar.y = Math.random() * canvas.height;
+          if(currentStar.z <= 0 || currentStar.x < 0 || currentStar.y < 0 || currentStar.x > canvas.width || currentStar.y > canvas.height){
+            currentStar.z = canvas.width;
+            currentStar.x = Math.random() * canvas.width;
+            currentStar.y = Math.random() * canvas.height;
+          }
         }
       }
     }
@@ -51,18 +53,17 @@ window.onload = function() {
     function drawStars() {
       var pixelX, pixelY, pixelRadius;
   
-      if(canvas.width != window.innerWidth || canvas.width != window.innerWidth){
+      if(canvas.width !== window.innerWidth || canvas.height !== window.innerHeight){
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         initializeStars();
       }
-      if(warp === 0) {
-        canvasContext.fillStyle = "rgba(0, 10, 20, 1)";
-        canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      canvasContext.fillStyle = "rgba(209, 255, 255, " + radius + ")";
+  
+      canvasContext.fillStyle = "rgba(0, 10, 20, 1)";
+      canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+  
       for(index = 0; index < numStars; index++) {
-        currentStar = stars[index];
+        var currentStar = stars[index];
         
         pixelX = (currentStar.x - centerX) * (focalLength / currentStar.z);
         pixelX += centerX;
@@ -70,8 +71,8 @@ window.onload = function() {
         pixelY += centerY;
         pixelRadius = 1 * (focalLength / currentStar.z);
         
-        canvasContext.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
         canvasContext.fillStyle = "rgba(209, 255, 255, " + currentStar.o + ")";
+        canvasContext.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
       }
     }
   
@@ -106,15 +107,11 @@ window.onload = function() {
     });
   
     document.getElementById('warp').addEventListener("click", function(e) {
-      window.warp = window.warp === 1 ? 0 : 1;
-      window.canvasContext.clearRect(0, 0, window.canvas.width, window.canvas.height);
-      executeFrame();
+      warp = warp === 1 ? 0 : 1;
+      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
     });
   
-    if(canvasContext === null) {
-      alert("Canvas context is not supported.");
-    } else {
-      executeFrame();
-    }
+    // Initialize stars and start animation
+    initializeStars();
+    executeFrame();
   };
-  
