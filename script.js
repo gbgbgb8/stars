@@ -77,9 +77,17 @@ window.onload = function() {
       canvasContext.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
     }
 
+    var angle = Math.atan2(dy, dx) - Math.PI / 4;  // Calculate the angle for rotation
+
+    canvasContext.save();  // Save the current context
+    canvasContext.translate(centerX, centerY);  // Translate to the center
+    canvasContext.rotate(angle);  // Rotate the canvas context
+
     canvasContext.font = "32px Arial";
     canvasContext.fillStyle = "white";
-    canvasContext.fillText(spaceshipEmoji, centerX - 16, centerY - 16);
+    canvasContext.fillText(spaceshipEmoji, -16, -16);  // Draw emoji at the new rotated position
+
+    canvasContext.restore();  // Restore to the original context
   }
 
   function executeFrame() {
