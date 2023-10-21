@@ -5,10 +5,11 @@ window.onload = function() {
   var canvasContext = canvas.getContext("2d");
 
   var numStars = 1900;
-  var radius = '0.' + Math.floor(Math.random() * 9) + 1;
   var focalLength = canvas.width * 2;
   var warp = 0;
   var centerX, centerY;
+
+  var rocketX, rocketY;  // New variables for rocket position
 
   var stars = [];
   var index;
@@ -22,6 +23,9 @@ window.onload = function() {
   function initializeStars() {
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
+
+    rocketX = centerX;  // Initialize rocket position
+    rocketY = centerY;
 
     stars = [];
     for(index = 0; index < numStars; index++){
@@ -39,12 +43,10 @@ window.onload = function() {
     for(index = 0; index < numStars; index++) {
       var currentStar = stars[index];
       if(currentStar) {
-        currentStar.z -= 1;
         currentStar.x += dx;
         currentStar.y += dy;
 
-        if(currentStar.z <= 0 || currentStar.x < 0 || currentStar.y < 0 || currentStar.x > canvas.width || currentStar.y > canvas.height){
-          currentStar.z = canvas.width;
+        if(currentStar.x < 0 || currentStar.y < 0 || currentStar.x > canvas.width || currentStar.y > canvas.height){
           currentStar.x = Math.random() * canvas.width;
           currentStar.y = Math.random() * canvas.height;
         }
@@ -67,27 +69,19 @@ window.onload = function() {
     for(index = 0; index < numStars; index++) {
       var currentStar = stars[index];
 
-      pixelX = (currentStar.x - centerX) * (focalLength / currentStar.z);
-      pixelX += centerX;
-      pixelY = (currentStar.y - centerY) * (focalLength / currentStar.z);
-      pixelY += centerY;
+      pixelX = (currentStar.x - rocketX) * (focalLength / currentStar.z);
+      pixelX += rocketX;
+      pixelY = (currentStar.y - rocketY) * (focalLength / currentStar.z);
+      pixelY += rocketY;
       pixelRadius = 1 * (focalLength / currentStar.z);
 
       canvasContext.fillStyle = "rgba(209, 255, 255, " + currentStar.o + ")";
       canvasContext.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
     }
 
-    var angle = Math.atan2(dy, dx) - Math.PI / 4;  // Calculate the angle for rotation
-
-    canvasContext.save();  // Save the current context
-    canvasContext.translate(centerX, centerY);  // Translate to the center
-    canvasContext.rotate(angle);  // Rotate the canvas context
-
     canvasContext.font = "32px Arial";
     canvasContext.fillStyle = "white";
-    canvasContext.fillText(spaceshipEmoji, -16, -16);  // Draw emoji at the new rotated position
-
-    canvasContext.restore();  // Restore to the original context
+    canvasContext.fillText(spaceshipEmoji, rocketX - 16, rocketY - 16);
   }
 
   function executeFrame() {
@@ -105,18 +99,38 @@ window.onload = function() {
     dx = 0;
     dy = 0;
 
-    if(x < centerX && y < centerY) {
+    if(x < rocketX && y < rocketY) {
       dx = -1;
       dy = -1;
-    } else if(x > centerX && y < centerY) {
+    } else if(x > rocketX && y < rocketY) {
       dx = 1;
       dy = -1;
-    } else if(x < centerX && y > centerY) {
+    } else if(x < rocketX && y > rocketY) {
       dx = -1;
       dy = 1;
     } else {
       dx = 1;
       dy = 1;
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    dx = 0;
+    dy = 0;
+    
+    switch (e.key) {
+      case 'ArrowUp':
+        dy = -1;
+        break;
+      case 'ArrowDown':
+        dy = 1;
+        break;
+      case 'ArrowLeft':
+        dx = -1;
+        break;
+      case 'ArrowRight':
+        dx = 1;
+        break;
     }
   });
 
