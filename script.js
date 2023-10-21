@@ -9,7 +9,7 @@ window.onload = function() {
   var warp = 0;
   var centerX, centerY;
 
-  var rocketX, rocketY;  // New variables for rocket position
+  var rocketX, rocketY;
 
   var stars = [];
   var index;
@@ -24,7 +24,7 @@ window.onload = function() {
     centerX = canvas.width / 2;
     centerY = canvas.height / 2;
 
-    rocketX = centerX;  // Initialize rocket position
+    rocketX = centerX;
     rocketY = centerY;
 
     stars = [];
@@ -79,9 +79,17 @@ window.onload = function() {
       canvasContext.fillRect(pixelX, pixelY, pixelRadius, pixelRadius);
     }
 
+    var angle = Math.atan2(dy, dx) + Math.PI / 4;
+
+    canvasContext.save();
+    canvasContext.translate(rocketX, rocketY);
+    canvasContext.rotate(angle);
+
     canvasContext.font = "32px Arial";
     canvasContext.fillStyle = "white";
-    canvasContext.fillText(spaceshipEmoji, rocketX - 16, rocketY - 16);
+    canvasContext.fillText(spaceshipEmoji, -16, -16);
+
+    canvasContext.restore();
   }
 
   function executeFrame() {
@@ -100,17 +108,17 @@ window.onload = function() {
     dy = 0;
 
     if(x < rocketX && y < rocketY) {
-      dx = -1;
-      dy = -1;
+      dx = 1;
+      dy = 1;
     } else if(x > rocketX && y < rocketY) {
-      dx = 1;
-      dy = -1;
-    } else if(x < rocketX && y > rocketY) {
       dx = -1;
       dy = 1;
-    } else {
+    } else if(x < rocketX && y > rocketY) {
       dx = 1;
-      dy = 1;
+      dy = -1;
+    } else {
+      dx = -1;
+      dy = -1;
     }
   });
 
@@ -120,16 +128,16 @@ window.onload = function() {
     
     switch (e.key) {
       case 'ArrowUp':
-        dy = -1;
-        break;
-      case 'ArrowDown':
         dy = 1;
         break;
+      case 'ArrowDown':
+        dy = -1;
+        break;
       case 'ArrowLeft':
-        dx = -1;
+        dx = 1;
         break;
       case 'ArrowRight':
-        dx = 1;
+        dx = -1;
         break;
     }
   });
